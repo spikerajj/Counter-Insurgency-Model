@@ -1,0 +1,4 @@
+node: 69c7534c7b45119dd9d33d1c32a7ff4c48d8080f
+node-date: 2026-06-11T16:12:06-04:00
+describe-name: v3.11.0
+ref-names: HEAD, tag: v3.11.0

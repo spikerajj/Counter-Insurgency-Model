@@ -1,0 +1,81 @@
+# Bundled code.
+subdir('agg24-svn')
+
+# External code.
+
+# FreeType 2.3 has libtool version 9.11.3 as can be checked from the tarball.
+# For FreeType>=2.4, there is a conversion table in docs/VERSIONS.txt in the
+# FreeType source tree.
+if get_option('system-freetype')
+  freetype_dep = dependency('freetype2', version: '>=9.11.3')
+else
+  freetype_proj = subproject(
+    'freetype2',
+    default_options: [
+      'default_library=static',
+      'brotli=disabled',
+      'bzip2=disabled',
+      get_option('system-libraqm') ? 'harfbuzz=disabled' : 'harfbuzz=static',
+      'mmap=auto',
+      'png=disabled',
+      'tests=disabled',
+      'zlib=internal',
+  ])
+  freetype_dep = freetype_proj.get_variable('freetype_dep')
+endif
+
+if get_option('system-libraqm')
+  libraqm_dep = dependency('raqm', version: '>=0.10.4')
+else
+  subproject('harfbuzz',
+    default_options: [
+      'default_library=static',
+      'benchmark=disabled',
+      'cairo=disabled',
+      'chafa=disabled',
+      'coretext=disabled',
+      'directwrite=disabled',
+      'docs=disabled',
+      'doc_tests=false',
+      'fontations=disabled',
+      'freetype=enabled',
+      'gdi=disabled',
+      'glib=disabled',
+      'gobject=disabled',
+      'gpu=disabled',
+      'gpu_demo=disabled',
+      'harfrust=disabled',
+      'icu=disabled',
+      'introspection=disabled',
+      'kbts=disabled',
+      'png=disabled',
+      'raster=disabled',
+      'subset=disabled',
+      'tests=disabled',
+      'utilities=disabled',
+      'vector=disabled',
+      'wasm=disabled',
+      'zlib=disabled',
+    ]
+  )
+  subproject('sheenbidi', default_options: ['default_library=static'])
+  libraqm_proj = subproject('libraqm',
+    default_options: [
+      'default_library=static',
+      'sheenbidi=true',
+      'tests=false',
+    ]
+  )
+  libraqm_dep = libraqm_proj.get_variable('libraqm_dep')
+endif
+
+if get_option('system-qhull')
+  qhull_dep = dependency('qhull_r', version: '>=8.0.2', required: false)
+  if not qhull_dep.found()
+    cc.check_header('libqhull_r/qhull_ra.h', required: true)
+    qhull_dep = cc.find_library('qhull_r')
+  endif
+else
+  qhull_proj = subproject('qhull')
+  qhull_dep = qhull_proj.get_variable('qhull_dep')
+endif
