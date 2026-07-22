@@ -1,4 +1,5 @@
-# coinv2
+# Counter-Insurgency-Model 
+
 # cmd to install libraries (python 3.11)
 
 # without internet ->
