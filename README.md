@@ -14,3 +14,5 @@
 
 # cmd to run
 # streamlit run app.py 
+
+# required libraries 
